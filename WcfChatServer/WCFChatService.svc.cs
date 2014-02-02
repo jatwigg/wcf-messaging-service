@@ -8,24 +8,22 @@ using System.Text;
 
 namespace WcfChatServer
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class WCFChatService : IWCFChatService
     {
-        const int MESSAGE_TYPE_SERVER = 1, MESSAGE_TYPE_USER = 2;
-
+        private const int MESSAGE_TYPE_SERVER = 1, MESSAGE_TYPE_USER = 2;
         delegate void MessageEventHandler(object sender, MessageArgs e);
-        event MessageEventHandler MessageEvent;
-        MessageEventHandler _handler = null; // retain this so we can remove on disconnect
+        // each connect will subscribe a new instance of MessageEventHandler delagate to this event, and disconnect will remove it.
+        private static event MessageEventHandler MessageEvent;
 
-        List<ConnectedClient> _connections = new List<ConnectedClient>();
-        IWcfChatClient _callback = null;
+        private MessageEventHandler _handler = null; // retain this so we can unsubscribe from the event on disconnect
+        private List<ConnectedClient> _connections = new List<ConnectedClient>();
+        private IWcfChatClient _callback = null;
 
         /// <summary>
         /// Connect and receive a unique identifier which you may use to perform actions until you disconnect.
         /// </summary>
         /// <param name="username">A chosen username to be known by, does not need to be unqiue.</param>
-        /// <returns></returns>
+        /// <returns>a unique string that a client may use to perform actions, or null if there is a problem.</returns>
         public string Connect(string username)
         {
             ConnectedClient client = new ConnectedClient(username);
@@ -35,11 +33,12 @@ namespace WcfChatServer
             {
                 _callback = OperationContext.Current.GetCallbackChannel<IWcfChatClient>();
                 MessageEvent += (_handler = new MessageEventHandler(messageEventHandler));
+                MessageEvent(this, new MessageArgs(null, string.Format("USER {0} has joined the server.", username), MESSAGE_TYPE_SERVER, 0));
             }
             catch (Exception e)
             {
-                // TODO: log
-                // TODO: return null 
+                log(string.Format("Exception raised during assigning callback, perhaps callback channel is not of type {0}. Exception: {1}.", typeof(IWcfChatClient).Name, e.ToString()));
+                return null;
             }
 
             return client.id;
@@ -63,6 +62,7 @@ namespace WcfChatServer
         /// <param name="message">The string message to distribute.</param>
         public void SendMessage(string id, string message)
         {
+            // fire the event. all subscribers (including this instance) will receive the message
             MessageEvent(this, new MessageArgs(id, message, MESSAGE_TYPE_USER, 0));
         }
 
@@ -77,7 +77,7 @@ namespace WcfChatServer
             ConnectedClient client = _connections.Find(c => c.id == id);
             if (client == null) return false;
 
-            MessageEvent(this, new MessageArgs(null, string.Format("USER {0} his now known as {1}.", client.name, client.name = newname), MESSAGE_TYPE_SERVER, 0));
+            MessageEvent(this, new MessageArgs(null, string.Format("USER {0} is now known as {1}.", client.name, client.name = newname), MESSAGE_TYPE_SERVER, 0));
             return true;
         }
 
@@ -94,17 +94,34 @@ namespace WcfChatServer
             }
             else
             {
-                // TODO: log unknown message type
+                log(string.Format("Unknown message type {0} for message {1}.", e.type, e.message));
             }
         }
 
+        /// <summary>
+        /// Get the current username of a user by their ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The username or "unknown".</returns>
         private string getUserName(string id)
         {
             ConnectedClient client = _connections.Find(s => s.id == id);
             return (client==null? "unknown" : client.name);
         }
+
+        /// <summary>
+        /// Write to log.
+        /// </summary>
+        /// <param name="text">The text to log/</param>
+        private void log(string text)
+        {
+            //TODO: output to log file
+        }
     }
 
+    /// <summary>
+    /// The arguement passed into the MessageEvent. Represents messages that are pushed to the clients.
+    /// </summary>
     public class MessageArgs : EventArgs
     {
         public int type;
@@ -114,7 +131,6 @@ namespace WcfChatServer
 
         public MessageArgs(string id, string message, int type, int code)
         {
-            // TODO: Complete member initialization
             this.userid = id;
             this.message = message;
             this.type = type;

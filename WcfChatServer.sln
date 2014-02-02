@@ -1,7 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfChatServer", "WcfChatServer\WcfChatServer.csproj", "{C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClient", "ChatClient\ChatClient.csproj", "{1C76F939-9CF7-4CC9-A80C-4218A8AA1895}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2} = {C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +20,10 @@ Global
 		{C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C25F99FC-52A0-43EC-86E4-6B69DA0F5FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C76F939-9CF7-4CC9-A80C-4218A8AA1895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C76F939-9CF7-4CC9-A80C-4218A8AA1895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C76F939-9CF7-4CC9-A80C-4218A8AA1895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C76F939-9CF7-4CC9-A80C-4218A8AA1895}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

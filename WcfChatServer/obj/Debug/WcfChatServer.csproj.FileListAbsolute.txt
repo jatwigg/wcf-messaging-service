@@ -1,5 +1,5 @@
 c:\users\josh\documents\visual studio 2012\Projects\WcfChatServer\WcfChatServer\bin\WcfChatServer.dll
 c:\users\josh\documents\visual studio 2012\Projects\WcfChatServer\WcfChatServer\bin\WcfChatServer.pdb
-c:\users\josh\documents\visual studio 2012\Projects\WcfChatServer\WcfChatServer\obj\Debug\WcfChatServer.csprojResolveAssemblyReference.cache
 c:\users\josh\documents\visual studio 2012\Projects\WcfChatServer\WcfChatServer\obj\Debug\WcfChatServer.dll
 c:\users\josh\documents\visual studio 2012\Projects\WcfChatServer\WcfChatServer\obj\Debug\WcfChatServer.pdb
+C:\Users\Josh\Documents\Visual Studio 2012\Projects\WcfChatServer\WcfChatServer\bin\WcfChatServer.dll.config
