@@ -9,7 +9,7 @@ namespace WcfChatServer
     {
         public ConnectedClient(string username)
         {
-            id = new Guid().ToString();
+            id = Guid.NewGuid().ToString();
             name = username;
         }
 

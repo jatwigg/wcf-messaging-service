@@ -14,9 +14,9 @@ namespace WcfChatServer
         delegate void MessageEventHandler(object sender, MessageArgs e);
         // each connect will subscribe a new instance of MessageEventHandler delagate to this event, and disconnect will remove it.
         private static event MessageEventHandler MessageEvent;
+        private static List<ConnectedClient> _connections = new List<ConnectedClient>(); //TODO: thread safe this
 
         private MessageEventHandler _handler = null; // retain this so we can unsubscribe from the event on disconnect
-        private List<ConnectedClient> _connections = new List<ConnectedClient>();
         private IWcfChatClient _callback = null;
 
         /// <summary>
