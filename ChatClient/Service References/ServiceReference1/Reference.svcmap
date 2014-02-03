@@ -22,6 +22,7 @@
     <MetadataSource Address="http://localhost:54925/WCFChatService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="WCFChatService2.xsd" MetadataType="Schema" ID="911a716a-a0a8-45e6-b0e8-48c668e1daef" SourceId="1" SourceUrl="http://localhost:54925/WCFChatService.svc?xsd=xsd2" />
     <MetadataFile FileName="WCFChatService.xsd" MetadataType="Schema" ID="379de651-2282-4800-b8e8-811f151fce86" SourceId="1" SourceUrl="http://localhost:54925/WCFChatService.svc?xsd=xsd0" />
     <MetadataFile FileName="WCFChatService.wsdl" MetadataType="Wsdl" ID="90e14caf-9f50-4552-bb5a-b6cc9f19fff0" SourceId="1" SourceUrl="http://localhost:54925/WCFChatService.svc?wsdl" />
     <MetadataFile FileName="WCFChatService.disco" MetadataType="Disco" ID="16abe653-bd32-4b96-a37e-475a2caf59d4" SourceId="1" SourceUrl="http://localhost:54925/WCFChatService.svc?disco" />

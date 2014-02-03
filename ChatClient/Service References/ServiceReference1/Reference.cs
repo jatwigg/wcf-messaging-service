@@ -38,6 +38,18 @@ namespace ChatClient.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWCFChatService/ChangeName", ReplyAction="http://tempuri.org/IWCFChatService/ChangeNameResponse")]
         System.Threading.Tasks.Task<bool> ChangeNameAsync(string id, string newname);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWCFChatService/GetUsersOnline", ReplyAction="http://tempuri.org/IWCFChatService/GetUsersOnlineResponse")]
+        string[] GetUsersOnline(string id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWCFChatService/GetUsersOnline", ReplyAction="http://tempuri.org/IWCFChatService/GetUsersOnlineResponse")]
+        System.Threading.Tasks.Task<string[]> GetUsersOnlineAsync(string id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWCFChatService/Seen", ReplyAction="http://tempuri.org/IWCFChatService/SeenResponse")]
+        System.DateTime Seen(string id, string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWCFChatService/Seen", ReplyAction="http://tempuri.org/IWCFChatService/SeenResponse")]
+        System.Threading.Tasks.Task<System.DateTime> SeenAsync(string id, string name);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -108,6 +120,22 @@ namespace ChatClient.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> ChangeNameAsync(string id, string newname) {
             return base.Channel.ChangeNameAsync(id, newname);
+        }
+        
+        public string[] GetUsersOnline(string id) {
+            return base.Channel.GetUsersOnline(id);
+        }
+        
+        public System.Threading.Tasks.Task<string[]> GetUsersOnlineAsync(string id) {
+            return base.Channel.GetUsersOnlineAsync(id);
+        }
+        
+        public System.DateTime Seen(string id, string name) {
+            return base.Channel.Seen(id, name);
+        }
+        
+        public System.Threading.Tasks.Task<System.DateTime> SeenAsync(string id, string name) {
+            return base.Channel.SeenAsync(id, name);
         }
     }
 }

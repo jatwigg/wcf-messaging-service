@@ -89,7 +89,39 @@ namespace ChatClient
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Task t = _service.SendMessageAsync(_userId, _viewModel.TextBoxContent);
+            if (_viewModel.TextBoxContent.StartsWith("/seen "))
+            {
+                string name;
+                Task<DateTime> t = _service.SeenAsync(_userId, (name = _viewModel.TextBoxContent.Substring(6) ));
+                t.ContinueWith(r =>
+                    {
+                        if (r.Result == null || t.Result == DateTime.MinValue)
+                        {
+                            addMessage(String.Format("<SERVER MESSAGE> A user with the alias {0} is not connected.", name));
+                        }
+                        else 
+                        {
+                            addMessage(String.Format("<SERVER MESSAGE> {0} was last seen {1}.", name, t.Result.ToString("dd MMM HH:mm:ss")));
+                        }
+                    });
+            }
+            else if (_viewModel.TextBoxContent == "/list")
+            {
+                Task<string[]> t = _service.GetUsersOnlineAsync(_userId);
+                t.ContinueWith(r =>
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        foreach (string name in r.Result)
+                        {
+                            sb.Append(name + ", ");
+                        }
+                        addMessage(String.Format("<SERVER MESSAGE> currently connected users {0}.", sb.ToString()));
+                    });
+            }
+            else
+            {
+                _service.SendMessageAsync(_userId, _viewModel.TextBoxContent);
+            }
             _viewModel.TextBoxContent = String.Empty;
         }
 

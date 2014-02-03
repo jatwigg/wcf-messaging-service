@@ -11,9 +11,11 @@ namespace WcfChatServer
         {
             id = Guid.NewGuid().ToString();
             name = username;
+            lastMessageTime = DateTime.Now;
         }
 
         public string name { get; set; }
         public string id { get; private set; }
+        public DateTime lastMessageTime { get; set; }
     }
 }

@@ -24,6 +24,11 @@ namespace WcfChatServer
         [OperationContract(IsOneWay = false)]
         bool ChangeName(string id, string newname);
 
+        [OperationContract(IsOneWay = false)]
+        string[] GetUsersOnline(string id);
 
+        [OperationContract(IsOneWay = false)]
+        DateTime Seen(string id, string name);
+ 
     }
 }
