@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClient.ServiceReference1;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,21 +21,54 @@ namespace ChatClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, ServiceReference1.IWCFChatServiceCallback
+    public partial class MainWindow : Window, IWCFChatServiceCallback
     {
         private ViewModel _viewModel;
-        private ServiceReference1.WCFChatServiceClient _service;
+        private WCFChatServiceClient _service;
         private string _userId = "";
        
         public MainWindow()
         {
             this.DataContext = (_viewModel = new ViewModel());
             InitializeComponent();
-            _service = new ServiceReference1.WCFChatServiceClient(new InstanceContext(this));
+            _service = new WCFChatServiceClient(new InstanceContext(this));
             _viewModel.Username = "Anon";
             _viewModel.Connected = false;
             _viewModel.ConnectButtonEnabled = true;
         }
+
+        /// <summary>
+        /// Method for adding items to the itemlist in a thread safe way.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void addMessage(string message)
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                _viewModel.Messages.Add(message);
+            }
+            else
+            {
+                this.Dispatcher.BeginInvoke(new Action<string>(addMessage), new object[]{message});
+            }
+        }
+
+        #region Callbacks
+
+        void IWCFChatServiceCallback.onMessageReceived(string username, string message)
+        {
+            addMessage(String.Format("{0} : {1}", username, message));
+        }
+
+        void IWCFChatServiceCallback.onServerInfoReceived(int statusCode, string message)
+        {
+            //TODO: utilise status code
+            addMessage(String.Format("<SERVER MESSAGE> {0}", message));
+        }
+
+        #endregion
+
+        #region Buttons
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -43,8 +77,9 @@ namespace ChatClient
             if (_viewModel.Connected)
             {
                 Task<bool> disconnectTask = _service.DisconnectAsync(_userId);
-                disconnectTask.ContinueWith( t => {
-                    addMessage(String.Format("Disconnected {0}.", t.Result?"cleanly":"not cleanly"));
+                disconnectTask.ContinueWith(t =>
+                {
+                    addMessage(String.Format("Disconnected {0}.", t.Result ? "cleanly" : "not cleanly"));
                     _userId = "";
                     _viewModel.Connected = false;
                     _viewModel.ConnectButtonEnabled = true;
@@ -60,31 +95,8 @@ namespace ChatClient
                 _viewModel.Connected = true;
                 _viewModel.ConnectButtonEnabled = true;
             });
-           
+
             _viewModel.Messages.Add("Connecting please wait...");
-        }
-
-        private void addMessage(string message)
-        {
-            if (Dispatcher.CheckAccess())
-            {
-                _viewModel.Messages.Add(message);
-            }
-            else
-            {
-                this.Dispatcher.BeginInvoke(new Action<string>(addMessage), new object[]{message});
-            }
-        }
-
-        void ServiceReference1.IWCFChatServiceCallback.onMessageReceived(string username, string message)
-        {
-            addMessage(String.Format("{0} : {1}", username, message));
-        }
-
-        void ServiceReference1.IWCFChatServiceCallback.onServerInfoReceived(int statusCode, string message)
-        {
-            //TODO: utilise status code
-            addMessage(String.Format("<SERVER MESSAGE> {0}", message));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -129,5 +141,7 @@ namespace ChatClient
         {
             _service.ChangeNameAsync(_userId, _viewModel.Username);
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClient.ServiceReference1;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ChatClient
 {
@@ -27,6 +29,7 @@ namespace ChatClient
         private string _connectButtonLabel;
         private bool _connected;
         private bool _connectButtonEnabled;
+
         // properties that are bound to the UI
         public ObservableCollection<string> Messages
         {
